@@ -13,6 +13,34 @@
  */
 
 /**
+ * Overriding existing equals method for array.
+ */
+Array.prototype.equals = function (array) {
+    if (!array)
+        return false; 
+    if (this.length != array.length)
+        return false;
+    for (var idx = 0, len = this.length; idx < len; idx++) {
+        if (this[idx] instanceof Array && array[idx] instanceof Array)
+            if (!this[idx].equals(array[idx]))
+				return false;        
+        else if (this[idx] != array[idx])
+			return false;          
+    }       
+    return true;
+}
+Object.defineProperty(Array.prototype, "equals", {enumerable: false});
+
+/**
+ * Fails if condition is false.
+ * @param {boolean} condition - condition to be checked.
+ * @param {string} message - exception message.
+ */
+function assert(condition, message) {
+	if (!condition) throw message || "Assertion failed";
+}
+
+/**
  * Appends the next node to the end of a list.
  * @param {Object} list - list to be modified.
  * @param {number} value - the value to be set.
@@ -89,3 +117,73 @@ function listToArray(list) {
 	}
 	return array;
 }
+
+/**
+ * Compares to lists.
+ * @param {Object} list1 - first list.
+ * @param {Object} list2 - second list.
+ * @returns true if both lists are equal.
+ * @returns false if the lists are different.
+ */
+function compare(list1, list2) {
+	var node1 = undefined, node2 = undefined;
+	for (node1 = list1, node2 = list2;
+		 node1 || node2;
+		 node1 = node1.next, node2 = node2.next)
+	{
+		if (node1.value == node2.value) continue;
+		else return false;
+	}
+	return node1 && node2 ? false : true;
+}
+
+/** Testing the functionality */
+var testMap = {
+			/** arrayToList, listToArray */
+			1: {list: {value: 1, next: null},
+				array: [1]},
+			2: {list: {value: 12, next: {value: -12, next: null}},
+				array: [12, -12]},
+			/** append, prepend */
+			3: {list: {value: 1, next: {value: 2, next: null}},
+				append: {value: 1, next: {value: 2, next: {value: 3, next: null}}},
+                prepend: {value: 3, next: {value: 1, next: {value: 2, next: {value: 3, next: null}}}}},
+};
+
+/** Testing @ref arrayToList(array) */
+for (var idx = 1; idx <= 2; idx++) {
+	assert(compare(arrayToList(testMap[idx].array), testMap[idx].list));
+}
+
+/** Testing @ref listToArray(list) */
+for (var idx = 1; idx <= 2; idx++) {
+	assert(listToArray(testMap[idx].list).equals(testMap[idx].array));
+}
+
+/** Testing @ref append(value) */
+append(testMap[3].list, 3);
+assert(compare(testMap[3].list, testMap[3].append));
+
+/** Testing @ref prepend(value) */
+var tempList = prepend(testMap[3].list, 3);
+assert(compare(tempList, testMap[3].prepend));
+
+/** Testing @ref nth(index) */
+assert(nth(arrayToList([10, 20, 30]), 1) == 20);
+assert(nth(arrayToList([10, 20, 30]), 0) == 10);
+assert(nth(arrayToList([10, 20, 30]), 2) == 30);
+
+/** Testing @ref nthRecursive(index) */
+assert(nth(arrayToList([-1, 0, 1]), 1) == 0);
+assert(nth(arrayToList([-1, 0, 1]), 0) == -1);
+assert(nth(arrayToList([-1, 0, 1]), 2) == 1);
+
+
+console.log(arrayToList([10, 20]));
+// → {value: 10, rest: {value: 20, rest: null}}
+console.log(listToArray(arrayToList([10, 20, 30])));
+// → [10, 20, 30]
+console.log(prepend(10, prepend(20, null)));
+// → {value: 10, rest: {value: 20, rest: null}}
+console.log(nth(arrayToList([10, 20, 30]), 1));
+// → 20
