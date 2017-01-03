@@ -58,6 +58,26 @@ function append(list, value) {
 }
 
 /**
+ * Removes element from list at given position.
+ * @param {Object} list - input list.
+ * @param {index} index - index of the element to be removed.
+ */
+function remove(list, index) {
+	if (index == 0) {
+		list.value = next.value;
+		list.next = next.next;
+	}
+	var prev = list;
+	for (var node = list; node != null; node = node.next, index--) {
+		if (index == 0) {
+			prev.next = node.next;
+			break;
+		}
+		prev = node;
+	}
+}
+
+/**
  * Creates a new list that adds the element
  * to the front of the input list.
  * @param {Object} list - input list.
@@ -167,6 +187,13 @@ assert(compare(testMap[3].list, testMap[3].append));
 /** Testing @ref prepend(value) */
 var tempList = prepend(testMap[3].list, 3);
 assert(compare(tempList, testMap[3].prepend));
+
+/** Testing @ref remove */
+tempList = {value: 1, next: {value: 2, {next: {value: 3, next: null }}}};
+remove(tempList, 0);
+assert(compare(tempList, {value: 2, next: {value: 3, next: null}}));
+remove(tempList, 1);
+assert(compare(tempList, {value: 2, next: null}));
 
 /** Testing @ref nth(index) */
 assert(nth(arrayToList([10, 20, 30]), 1) == 20);
