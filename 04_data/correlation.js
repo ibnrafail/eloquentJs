@@ -19,25 +19,23 @@ function hasEvent(event, entry) {
 
 function tableFor(event, journal) {
 	var table = [0, 0, 0, 0];
-	for (var i = 0; i < journal.length; i++) {
-		var entry = journal[i], index = 0;
+	journal.forEach(function(entry) {
+		var index = 0;
 		if (hasEvent(event, entry)) index += 1;
 		if (entry.squirrel) index += 2;
 		table[index] += 1;
-	}
+	});
 	return table;
 }
 
 function gatherCorrelations(journal) {
 	var phis = {};
-	for (var entry = 0; entry < journal.length; entry++) {
-		var events = journal[entry].events;
-		for (var i = 0; i < events.length; i++) {
-			var event = events[i];
+	journal.forEach(function(entry) {
+		entry.events.forEach(function(event) {
 			if (!(event in phis))
 				phis[event] = phi(tableFor(event, journal));
-		}
-	}
+		});
+	});
 	return phis;
 }
 
