@@ -9,8 +9,7 @@
 	for numbers that are divisible by both 3 and 5
 	(and still print "Fizz" or "Buzz" for numbers divisible by only one of those).
 */
-for (var number = 1; number <= 100; number++)
-{
+for (var number = 1; number <= 100; number++) {
 	if (number % 15 == 0) console.log("FizzBuzz");
 	else if (number % 3 == 0) console.log("Fizz");
 	else if (number % 5 == 0) console.log("Buzz");
