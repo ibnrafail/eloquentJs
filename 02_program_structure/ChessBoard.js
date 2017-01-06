@@ -21,12 +21,10 @@
 var size = 8;
 var str = "";
 
-for (var i = 0; i < size; i++)
-{
+for (var i = 0; i < size; i++) {
 	var ch = i % 2 == 0 ? " " : "#";
 	str += ch;
-	for (var j = 1; j < size; j++)
-	{
+	for (var j = 1; j < size; j++) {
 		ch = ch == "#" ? " " : "#";
 		str += ch;
 	}
